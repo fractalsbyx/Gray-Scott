@@ -1,0 +1,20 @@
+subsection Rectangular mesh
+  set x size = 2.0
+  set y size = 2.0
+end
+
+set global refinement = 8
+
+set time step = 0.5
+set number steps = 100000
+
+subsection output
+  set condition = EQUAL_SPACING
+  set number = 500
+  set file type = vtu
+end
+
+set Model constant Du = 0.00002, DOUBLE
+set Model constant Dv = 0.00001, DOUBLE
+set Model constant f  = 0.04, DOUBLE
+set Model constant k  = 0.06, DOUBLE

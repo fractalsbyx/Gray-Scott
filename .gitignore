@@ -1,3 +1,14 @@
+#
+*.vtu
+*.vtk
+*.xdmf
+*.h5
+*.pvtu
+*/build/
+.cache/
+summary.log
+triangulation
+
 # Prerequisites
 *.d
 
