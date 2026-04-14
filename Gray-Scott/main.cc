@@ -3,6 +3,7 @@
 
 #include "custom_pde.h"
 
+#include <prismspf/core/conditional_ostreams.h>
 #include <prismspf/core/parse_cmd_options.h>
 #include <prismspf/core/problem.h>
 #include <prismspf/core/solve_block.h>
@@ -40,7 +41,21 @@ main(int argc, char *argv[])
   UserInputParameters<dim>       user_inputs(cli_options.get_parameters_filename());
   PhaseFieldTools<dim>           pf_tools;
   GrayScott<dim, degree, double> pde_operator(user_inputs, pf_tools);
-  Problem<dim, degree, double>   problem(fields,
+  if (pde_operator.auto_dt)
+    {
+      // assuming square and no subdivisions
+      double dx = user_inputs.spatial_discretization.rectangular_mesh.size[0] /
+                  (1 << user_inputs.spatial_discretization.global_refinement);
+      double D         = std::max(pde_operator.Du, pde_operator.Dv);
+      double stability = pde_operator.stability;
+      user_inputs.temporal_discretization.dt =
+        stability * (dx * dx) / (2 * dim * D * degree * degree);
+      ConditionalOStreams::pout_base()
+        << "Time step size (dt) set to: " << user_inputs.temporal_discretization.dt
+        << std::endl;
+    }
+
+  Problem<dim, degree, double> problem(fields,
                                        solve_blocks,
                                        user_inputs,
                                        pf_tools,

@@ -27,6 +27,9 @@ public:
   number f  = 0.04;
   number k  = 0.06;
 
+  double stability = 1.0;  // Stability factor (less than 1 for stability)
+  bool   auto_dt   = true; // Whether to automatically compute dt based on stability
+
   /**
    * @brief Constructor.
    */
@@ -37,6 +40,8 @@ public:
     , Dv(_user_inputs.user_constants.get_double("Dv"))
     , f(_user_inputs.user_constants.get_double("f"))
     , k(_user_inputs.user_constants.get_double("k"))
+    , stability(_user_inputs.user_constants.get_double("stability"))
+    , auto_dt(_user_inputs.user_constants.get_bool("auto_dt"))
   {}
 
 private:
